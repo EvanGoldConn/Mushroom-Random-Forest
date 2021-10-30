@@ -1,0 +1,1 @@
+mushroomFile = readtable('mushrooms.csv')
