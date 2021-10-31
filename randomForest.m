@@ -5,7 +5,7 @@
 
 
 mushroomFile = readtable('trainingDataset.csv');
-leafSizes = [1 5 10]; %find optimal number?
+leafSizes = [1 5 10 15 20 25]; %find optimal number?
 numTrees = 25; %find optimal number?
 rng(9876, 'twister');
 savedRng = rng; %why 9876?
@@ -15,16 +15,18 @@ Xcol = [mushroomFile.CAP_SHAPE mushroomFile.CAP_SURFACE mushroomFile.BRUISES mus
     %'STALK_SURFACE_ABOVE_RING' 'STALK_SURFACE_BELOW_RING' 'STALK_COLOR_ABOVE_RING' 'STALK_COLOR_BELOW_RING' 'VEIL_TYPE' 'VEIL_COLOR' ...
     %'RING_NUMBER' 'RING_TYPE' 'SPORE_PRINT_COLOR' 'POPULATION' 'HABITAT'];
 
-Ycol = mushroomFile.CAN_EAT;
+Xcol = removevars(mushroomFile,{'CAN_EAT'});
+Ycol = ordinal(mushroomFile.CAN_EAT);
+'hi'
 %Ycol = ordinal('CAN_EAT');
 
 
 
-color = 'bgr';
+color = 'bgrcmy';
 for ii = 1:length(leafSizes) %run through diff leaf sizes
     rng(savedRng)
     
-    b = TreeBagger(numTrees,Ycol,Xcol, 'OOBPrediction', 'on', 'CategoricalPredictors', 22, ...
+    b = TreeBagger(numTrees,Xcol,Ycol, 'OOBPrediction', 'on', 'CategoricalPredictors', 22, ...
         'MinLeafSize', leafSizes(ii), 'Method', 'classification'); 
     
     %{
@@ -46,9 +48,26 @@ end
 
 xlabel('Number of grown trees')
 ylabel('Out-of-Bag Classification Error')
-legend({'1','5','10'},'Location','NorthEast')
+legend({'1','5','10', '15', '20', '25'},'Location','NorthEast')
 title('Classification Error for Different Leaf Sizes')
 hold off
+
+
+
+% numTrees = 40;
+% numLeaf = 10;
+% rng(savedRng);
+% b = TreeBagger(numTrees, Xcol, Ycol, 'OOBPredictorImportance','on',...
+%                           'CategoricalPredictors',22,...
+%                           'MinLeafSize',numLeaf, 'Method', 'classification');
+%                       
+% bar(b.OOBPermutedPredictorDeltaError)
+% xlabel('Feature number')
+% ylabel('Out-of-bag feature importance')
+% title('Feature importance results')
+
+
+
 
 
 
