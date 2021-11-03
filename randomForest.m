@@ -52,7 +52,8 @@ legend({'1','5','10', '15', '20', '25'},'Location','NorthEast')
 title('Classification Error for Different Leaf Sizes')
 hold off
 
-
+%%%%%% NESTED FOR LOOP TO PLOT NUMBER OF LEAFS AND NUMBER OF TREES TO
+%%%%%% DETERMINE WHEN IT'S 'TOO MANY'. 
 
 % numTrees = 40;
 % numLeaf = 10;
